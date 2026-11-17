@@ -172,10 +172,53 @@ footer img{width:96px}
 footer a{color:inherit;font-weight:800}
 footer p{margin-top:10px}
 footer .legal{margin-top:24px;font-size:12px;opacity:.85}
-@media (min-width:900px){
-  .ph .main{object-fit:contain}
-  .copy{left:7vw;right:auto;margin:0;max-width:520px}
-  .copy.c{left:0;right:0;margin:0 auto}
+.ph picture{display:contents}
+.slogan{font-size:clamp(34px,9vw,64px)}
+@media (min-width:900px) and (orientation:landscape){
+  /* Querformat-Bilder füllen die ganze Fläche */
+  .ph .blur{display:none}
+  .shade{background:linear-gradient(90deg,#000c 0%,#0006 34%,#0000 62%),linear-gradient(180deg,#0008 0%,#0000 20%,#0000 58%,#000c 100%)}
+  /* Kopf */
+  .top{padding:22px 34px}
+  .top img{width:78px;height:78px}
+  .top a{font-size:15px;padding:13px 22px}
+  .sound{right:26px;bottom:26px;width:52px;height:52px}
+  /* Text liegt links auf dem Bild */
+  .copy{left:7vw;right:auto;margin:0;padding:0;max-width:min(46vw,700px)}
+  .copy.b{bottom:15vh}.copy.t{top:17vh}
+  .copy.c{left:0;right:0;margin:0 auto;max-width:1180px;padding:0 6vw}
+  .copy h2{font-size:clamp(48px,5.6vw,104px)}
+  .copy p{font-size:clamp(18px,1.35vw,24px);max-width:34ch}
+  .kick{font-size:14px}
+  .num{font-size:clamp(110px,15vw,280px)}
+  .num small{font-size:15px}
+  .slogan{font-size:clamp(44px,5vw,92px)}
+  .intro-logo{width:min(26vw,440px)}
+  .hint{font-size:12px}
+  /* Holzarten: Scheibe links, Text rechts */
+  .woods{display:grid;grid-template-columns:minmax(300px,520px) minmax(320px,460px);column-gap:7vw;justify-content:center;align-content:center;text-align:left;min-height:100vh;padding:12vh 5vw}
+  .woods>.disc{grid-column:1;grid-row:1/9;width:100%;max-width:520px;margin:0;align-self:center}
+  .woods>:not(.disc){grid-column:2}
+  .woods h2{font-size:clamp(44px,4.6vw,76px)}
+  .woods .wname{font-size:52px}
+  .woods .wtxt{margin-left:0;max-width:36ch;font-size:17px}
+  .woods .wprice b{font-size:30px}
+  .chips{flex-wrap:wrap;overflow:visible;justify-content:flex-start;padding:26px 0 0}
+  /* Baukasten: breiter, zwei Spalten */
+  .light{padding:90px 40px 150px;border-radius:44px 44px 0 0;margin-top:-44px}
+  .wrap{max-width:1080px}
+  .light h2{font-size:clamp(44px,4.4vw,70px)}
+  .light .lead{font-size:18px;max-width:60ch}
+  .pane[data-pane="1"].on,.pane[data-pane="3"].on{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start}
+  .pane[data-pane="1"] .card,.pane[data-pane="3"] .card{margin-bottom:0}
+  .pane[data-pane="1"]>.err,.pane[data-pane="1"]>.btn{grid-column:1/-1}
+  .pane[data-pane="1"]>.btn{justify-self:end;width:auto;min-width:340px}
+  .pane[data-pane="2"].on,.pane[data-pane="4"].on{max-width:760px;margin:0 auto}
+  .card{padding:26px 26px}
+  .tiles{gap:10px}
+  .tile{font-size:13px}
+  .bar{left:50%;right:auto;translate:-50% 0;width:min(760px,92vw)}
+  footer{padding:56px 6vw 120px}
 }
 @media (prefers-reduced-motion:reduce){
   .scene{height:auto}.stick{position:relative;height:100svh}.grain{animation:none}.hint::after{animation:none}
@@ -248,7 +291,7 @@ footer .legal{margin-top:24px;font-size:12px;opacity:.85}
 <!-- Slogan -->
 <section class="scene" id="s8" style="height:200vh"><div class="stick">
   <div class="ph" data-img="flammen"></div><div class="shade" style="background:#0007"></div>
-  <div class="copy c" data-on=".2"><h2 style="font-size:clamp(34px,9vw,64px)"><span class="w">Frag den Max im Sommer an,</span> <span class="w">damit er's dir im Winter</span> <span class="w" style="color:var(--amber)">warm machen kann.</span></h2></div>
+  <div class="copy c" data-on=".2"><h2 class="slogan"><span class="w">Frag den Max im Sommer an,</span> <span class="w">damit er's dir im Winter</span> <span class="w" style="color:var(--amber)">warm machen kann.</span></h2></div>
 </div></section>
 
 <!-- Baukasten -->
@@ -347,10 +390,12 @@ const eur=n=>n.toLocaleString('de-DE',{minimumFractionDigits:2,maximumFractionDi
 const nf=n=>n.toLocaleString('de-DE',{maximumFractionDigits:1});
 const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
 
-/* Bilder */
-$$('.ph[data-img]').forEach(el=>{const u=IMG[el.dataset.img];
+const IMGD={"wald1": "https://d8j0ntlcm91z4.cloudfront.net/user_38khIkenba0dcwTWKdFp04Xo7ix/hf_20261117_141109_005750fa-9e20-42bf-8bef-c50464984a63.png", "wald2": "https://d8j0ntlcm91z4.cloudfront.net/user_38khIkenba0dcwTWKdFp04Xo7ix/hf_20261117_141652_b788dff9-9fae-4d46-a978-4be1258c0827.png", "axt": "https://d8j0ntlcm91z4.cloudfront.net/user_38khIkenba0dcwTWKdFp04Xo7ix/hf_20261117_141653_e0e199ef-bbb6-4b86-b44d-11a0a16102bb.png", "fall": "https://d8j0ntlcm91z4.cloudfront.net/user_38khIkenba0dcwTWKdFp04Xo7ix/hf_20261117_141655_c5076781-0e0c-4dd6-8af6-ab1e2242b245.png", "stumpf": "https://d8j0ntlcm91z4.cloudfront.net/user_38khIkenba0dcwTWKdFp04Xo7ix/hf_20261117_141652_1b301bae-9905-4cae-83cf-863c58192df1.png", "box": "https://d8j0ntlcm91z4.cloudfront.net/user_38khIkenba0dcwTWKdFp04Xo7ix/hf_20261117_141651_324bfa9f-b473-4bb7-9600-049b83519668.png", "anhaenger": "https://d8j0ntlcm91z4.cloudfront.net/user_38khIkenba0dcwTWKdFp04Xo7ix/hf_20261117_141654_4e440d7a-3b53-49f2-89d0-311e179612fd.png", "kamin": "https://d8j0ntlcm91z4.cloudfront.net/user_38khIkenba0dcwTWKdFp04Xo7ix/hf_20261117_141108_93105ee3-cbe7-4ee5-9df9-97fb04620031.png", "flammen": "https://d8j0ntlcm91z4.cloudfront.net/user_38khIkenba0dcwTWKdFp04Xo7ix/hf_20261117_141653_6731dd87-5468-4d02-aac3-21bc132adb70.png"};
+/* Bilder: Handy = Hochformat, Desktop (Querformat ab 900px) = 16:9 */
+$$('.ph[data-img]').forEach(el=>{const u=IMG[el.dataset.img],d=IMGD[el.dataset.img];
   if(!u){el.classList.add('fallback');return;}
-  el.innerHTML=`<img class="blur" src="${u}" alt="" aria-hidden="true"><img class="main" src="${u}" alt="" decoding="async">`;});
+  const src=d?`<source media="(min-width:900px) and (orientation:landscape)" srcset="${d}">`:'';
+  el.innerHTML=`<img class="blur" src="${u}" alt="" aria-hidden="true"><picture>${src}<img class="main" src="${u}" alt="" decoding="async"></picture>`;});
 const ph=id=>$(`.ph[data-img="${id}"]`);
 
 /* FX: Späne, Glut, Staub */
