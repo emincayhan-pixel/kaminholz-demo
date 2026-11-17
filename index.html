@@ -30,7 +30,7 @@ h1,h2,h3,.big{font-family:var(--serif);font-weight:600;letter-spacing:-.02em;lin
 .baron .sound{bottom:92px}.sound{transition:bottom .4s}.toast{position:fixed;left:50%;bottom:24px;translate:-50% 0;z-index:80;background:#000c;color:#fff;font-size:13px;font-weight:700;padding:9px 14px;border-radius:999px;opacity:0;transition:opacity .3s;pointer-events:none}.toast.on{opacity:1}.sound svg{width:20px;height:20px}
 
 /* Kino */
-.scene{position:relative;height:260vh}
+.scene{position:relative;height:150vh}
 .stick{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;background:#000}
 .ph{position:absolute;inset:0;will-change:transform,opacity}
 .ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
@@ -39,7 +39,7 @@ h1,h2,h3,.big{font-family:var(--serif);font-weight:600;letter-spacing:-.02em;lin
 .fallback{background:radial-gradient(70% 50% at 50% 40%,#3a2a1e,#0d0a08)}
 .shade{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,#000a 0%,#0000 22%,#0000 52%,#000d 100%)}
 .vig{position:fixed;inset:0;pointer-events:none;z-index:2;background:radial-gradient(120% 90% at 50% 50%,transparent 55%,#000a 100%)}
-.grain{position:fixed;inset:-50%;pointer-events:none;z-index:3;opacity:.09;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");animation:grain .6s steps(4) infinite}
+.grain{display:none;position:fixed;inset:-50%;pointer-events:none;z-index:3;opacity:.09;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");animation:grain .6s steps(4) infinite}
 @keyframes grain{0%{transform:translate(0,0)}25%{transform:translate(-4%,3%)}50%{transform:translate(3%,-5%)}75%{transform:translate(-2%,-2%)}100%{transform:translate(0,0)}}
 #fx{position:fixed;inset:0;width:100%;height:100%;z-index:4;pointer-events:none}
 .flash{position:absolute;inset:0;background:#fff6e0;opacity:0;pointer-events:none;mix-blend-mode:screen}
@@ -51,9 +51,9 @@ h1,h2,h3,.big{font-family:var(--serif);font-weight:600;letter-spacing:-.02em;lin
 .num{font-family:var(--serif);font-weight:700;font-size:clamp(96px,32vw,240px);line-height:.85;letter-spacing:-.05em;color:var(--ink);text-shadow:0 6px 60px #000}
 .num small{display:block;font-family:var(--sans);font-size:13px;letter-spacing:.28em;text-transform:uppercase;font-weight:800;color:var(--lime);margin-bottom:8px}
 .num.fire{color:var(--amber)}
-.w{display:inline-block;opacity:0;transform:translateY(30px);transition:opacity .9s,transform .9s cubic-bezier(.2,.8,.2,1)}
+.w{display:inline-block;opacity:0;transition:opacity .7s}
 .on .w{opacity:1;transform:none}
-.on .w:nth-child(2){transition-delay:.18s}.on .w:nth-child(3){transition-delay:.36s}
+
 .shake{animation:shake .5s cubic-bezier(.3,.7,.3,1)}
 @keyframes shake{0%{transform:translate(0,0)}12%{transform:translate(-12px,7px)}26%{transform:translate(10px,-8px)}42%{transform:translate(-6px,4px)}62%{transform:translate(4px,-2px)}100%{transform:none}}
 
@@ -289,7 +289,7 @@ footer .legal{margin-top:24px;font-size:12px;opacity:.85}
 </div></section>
 
 <!-- Slogan -->
-<section class="scene" id="s8" style="height:200vh"><div class="stick">
+<section class="scene" id="s8" style="height:140vh"><div class="stick">
   <div class="ph" data-img="flammen"></div><div class="shade" style="background:#0007"></div>
   <div class="copy c" data-on=".2"><h2 class="slogan"><span class="w">Frag den Max im Sommer an,</span> <span class="w">damit er's dir im Winter</span> <span class="w" style="color:var(--amber)">warm machen kann.</span></h2></div>
 </div></section>
@@ -466,29 +466,29 @@ $('#sound').onclick=()=>{
 /* Szenen */
 const S={};$$('.scene').forEach(el=>S[el.id]={el,p:0,vis:false});
 let hit=false,thud=false,lastBird=0;
-const shake=el=>{el.classList.remove('shake');void el.offsetWidth;el.classList.add('shake');navigator.vibrate&&navigator.vibrate(25);};
+const shake=()=>{};
 const tf=(el,s,ty=0,r=0)=>{if(el)el.style.transform=`translateY(${ty}%) scale(${s}) rotate(${r}deg)`;};
 function render(){
   const vh=innerHeight;
   for(const k in S){const r=S[k].el.getBoundingClientRect();S[k].p=reduce?.75:clamp(-r.top/(r.height-vh));S[k].vis=r.top<vh&&r.bottom>0;}
   $$('[data-on]').forEach(c=>{const s=c.closest('.scene');if(s)c.classList.toggle('on',S[s.id].p>=+c.dataset.on);});
   let p;
-  p=S.s1.p;tf(ph('wald1'),1.04+eio(p)*.3,eio(p)*-3);
-  const L=$('.intro-logo');L.style.opacity=1-seg(p,.1,.32);L.style.transform=`scale(${1+seg(p,0,.35)*.6})`;
+  p=S.s1.p;tf(ph('wald1'),1.02+eio(p)*.1,0);
+  const L=$('.intro-logo');L.style.opacity=1-seg(p,.1,.32);L.style.transform=`scale(${1+seg(p,0,.35)*.15})`;
   $('#s1 .hint').style.opacity=1-seg(p,0,.08);
   $('#top').classList.toggle('logo',S.s1.p>.3||!S.s1.vis);
-  p=S.s2.p;tf(ph('wald2'),1+eio(p)*.45,eio(p)*2);
-  p=S.s3.p;tf(ph('axt'),1.02+eio(seg(p,0,.5))*.2+seg(p,.5,1)*.05);
-  $('#s3 .flash').style.opacity=p>=.5?(1-seg(p,.5,.6))*.9:0;
-  if(p>=.5&&!hit){hit=true;if(!reduce&&S.s3.vis){chips();shake($('#s3 .shk'));oneShot('axt');}}if(p<.42)hit=false;
-  p=S.s4.p;tf(ph('fall'),1.06+eio(p)*.12,0,eio(seg(p,0,.7))*7);
+  p=S.s2.p;tf(ph('wald2'),1+eio(p)*.12,0);
+  p=S.s3.p;tf(ph('axt'),1.02+eio(p)*.06);
+  
+  if(p>=.5&&!hit){hit=true;if(!reduce&&S.s3.vis){oneShot('axt');}}if(p<.42)hit=false;
+  p=S.s4.p;tf(ph('fall'),1.03+eio(p)*.05);
   if(p>=.7&&!thud){thud=true;if(!reduce&&S.s4.vis){shake($('#s4 .shk'));oneShot('fall');}}if(p<.6)thud=false;
-  p=S.s5.p;const st=ph('stumpf'),bx=ph('box');tf(st,1.35-eio(seg(p,0,.55))*.3,0,seg(p,0,.55)*-12);st.style.opacity=1-seg(p,.42,.58);bx.style.opacity=seg(p,.42,.58);tf(bx,1.12-eio(seg(p,.42,1))*.1);
-  p=S.s6.p;tf(ph('anhaenger'),1.18-eio(p)*.16,eio(p)*-2);
-  p=S.s7.p;tf(ph('kamin'),1.2-eio(p)*.18);
-  p=S.s8.p;tf(ph('flammen'),1+eio(p)*.15);
-  emberRate=reduce?0:(S.s7.vis?Math.round(1+seg(S.s7.p,0,.6)*2):0)+(S.s8.vis?3:0);
-  dustRate=(S.s1.vis||S.s2.vis)?.35:0;
+  p=S.s5.p;const st=ph('stumpf'),bx=ph('box');tf(st,1.08-eio(seg(p,0,.55))*.06);st.style.opacity=1-seg(p,.42,.58);bx.style.opacity=seg(p,.42,.58);tf(bx,1.05-eio(seg(p,.42,1))*.04);
+  p=S.s6.p;tf(ph('anhaenger'),1.06-eio(p)*.05);
+  p=S.s7.p;tf(ph('kamin'),1.06-eio(p)*.05);
+  p=S.s8.p;tf(ph('flammen'),1+eio(p)*.05);
+  emberRate=reduce?0:(S.s7.vis||S.s8.vis?1:0);
+  dustRate=0;
   {const f=S.s1.vis||S.s2.vis?1:S.s3.vis||S.s4.vis?.55:S.s5.vis?.3:0;const fo=$('#anfrage').getBoundingClientRect();
    soundMix={wald:f,strasse:S.s6.vis?(S.s7.vis?.5:1):0,kamin:S.s7.vis||S.s8.vis?1:(fo.top<innerHeight&&fo.bottom>0?.25:0)};}
   const a=$('#anfrage').getBoundingClientRect();$('#bar').classList.toggle('on',a.top<vh*.6&&a.bottom>vh*.9&&step<4);document.body.classList.toggle('baron',$('#bar').classList.contains('on')||(a.top<vh&&a.bottom>0));
